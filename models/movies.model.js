@@ -26,12 +26,17 @@ class MovieModel {
 
     // Fetch showtimes for a movie
     static async getShowtimesByMovieId(movieId) {
-        const [rows] = await db.execute('SELECT * FROM showtimes WHERE movie_id = ?', [movieId]);
-        return rows;
+        try {
+            const result = await queryDatabase(`SELECT * FROM Screening WHERE MovieID = $1;`, [movieId]);
+            return result.rows;
+        } catch (error) {
+            console.error(error);
+            throw new Error('Failed to fetch showtimes');
+        }
     }
 
     static async getMovieById(movieId) {
-        const [rows] = await db.execute('SELECT * FROM movies WHERE movieid = ?', [movieId]);
+        const [rows] = await db.execute('SELECT * FROM movies WHERE movieid = $1', [movieId]);
         return rows[0];
     }
 }
