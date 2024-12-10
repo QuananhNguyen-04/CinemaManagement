@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Theater Booking</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Welcome to Movie Theater</h1>
+    <div id="movie-list">
+        <h2>Available Movies</h2>
+        <ul id="movieList">
+            <!-- Movies will be dynamically added here -->
+        </ul>
+    </div>
+
+    <script>
+        // Fetch and display the list of movies
+        fetch('/movies')
+            .then(response => response.json())
+            .then(data => {
+                const movieList = document.getElementById('movieList');
+                data.forEach(movie => {
+                    console.log(movie);
+                    const listItem = document.createElement('li');
+                    listItem.textContent = movie.name;
+                    listItem.onclick = () => showShowtimes(movie.movieid);  // Click on movie to see showtimes
+                    movieList.appendChild(listItem);
+                });
+            });
+
+        function showShowtimes(movieId) {
+            console.log(movieId);
+            window.location.href = `/showtimes/${movieId}`;
+        }
+    </script>
+
+</body>
+</html>

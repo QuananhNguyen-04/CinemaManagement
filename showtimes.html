@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Showtimes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Choose Showtime</h1>
+    <div id="showtime-list">
+        <h2>Available Showtimes</h2>
+        <ul id="showtimeList">
+            <!-- Showtimes will be dynamically added here -->
+        </ul>
+    </div>
+
+    <script>
+        const movieId = window.location.pathname.split('/').pop(); // Get movie ID from URL
+
+        // Fetch and display showtimes for the selected movie
+        fetch(`/showtimes/${movieId}`)
+            .then(response => response.json())
+            .then(data => {
+                const showtimeList = document.getElementById('showtimeList');
+                data.forEach(showtime => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${showtime.show_date} - ${showtime.show_time}`;
+                    listItem.onclick = () => showSeats(showtime.id);  // Click on showtime to view seats
+                    showtimeList.appendChild(listItem);
+                });
+            });
+
+        function showSeats(showtimeId) {
+            window.location.href = `/seats/${showtimeId}`;
+        }
+    </script>
+
+</body>
+</html>
