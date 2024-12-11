@@ -18,12 +18,12 @@ h1 {
 
 /* Movie list container */
 #movie-list {
-    max-width: 600px;
-    margin: 20px auto;
     padding: 20px;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    margin: 20px auto;
+    max-width: 90%;
 }
 
 /* Subtitle */
@@ -35,22 +35,54 @@ h1 {
 
 /* Movie list items */
 #movieList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
+/* Styling for individual movie items */
 #movieList li {
-    padding: 10px;
-    margin: 5px 0;
+    padding: 20px;
     background-color: #f0f0f0;
     border: 1px solid #ddd;
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
     transition: background-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 250px; /* Fixed height for consistent grid */
 }
 
 #movieList li:hover {
     background-color: #ddd;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust movie poster sizes */
+#movieList li img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Optional: Add movie title */
+#movieList li h3 {
+    font-size: 18px;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    /* Adjust grid for smaller screens */
+    #movieList {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
 }

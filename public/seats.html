@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Seats</title>
-    <link rel="stylesheet" href="seats.css">
+    <link rel="stylesheet" href="/styles/seats.css">
+    
 </head>
 <body>
-    <h1>Cinema Seat Booking</h1>
+    <h1 id = "heading">Cinema Seat Booking</h1>
+    <div id="screen">Screen</div>
     <div id="seat-container">
         <!-- Seats will be dynamically rendered here -->
     </div>
@@ -31,7 +33,6 @@
             container.innerHTML = '';
             // Loop through each row
             for (const [row, seats] of Object.entries(groupedSeats)) {
-                console.log(row, seats);
                 const rowDiv = document.createElement('div');
                 rowDiv.classList.add('seat-row'); // Add a class for styling
                 const rowLabel = String.fromCharCode(64 + Number(row)).toUpperCase(); // Convert 1 to 'A', 2 to 'B', etc.

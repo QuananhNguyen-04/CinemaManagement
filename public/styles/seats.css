@@ -1,0 +1,105 @@
+/* General styling */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-top: 20px;
+}
+h1 {
+    text-align: center;
+    padding: 20px;
+    background-color: #444;
+    color: white;
+    margin: 0;
+}
+
+#screen {
+    width: 60%;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #999;
+    color: white;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* General container styling */
+#seat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+    width: fit-content;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Seat row styling */
+.seat-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Seat button styling */
+.seat {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+/* Seat status */
+.seat.available {
+    background-color: #4caf50;
+    color: white;
+}
+
+.seat.reserved {
+    background-color: #f57c00;
+    color: white;
+    cursor: not-allowed;
+}
+
+.seat.broken {
+    background-color: #f44336;
+    color: white;
+    cursor: not-allowed;
+}
+
+/* Seat hover state for available seats */
+.seat.available:hover {
+    transform: scale(1.1);
+    background-color: #45a049;
+}
+
+/* Seat selected state */
+.seat.selected {
+    background-color: #2196f3;
+    color: white;
+}
+
+/* Disabled button styling */
+.seat:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
