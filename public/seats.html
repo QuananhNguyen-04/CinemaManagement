@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Seats</title>
+    <link rel="stylesheet" href="seats.css">
+</head>
+<body>
+    <h1>Cinema Seat Booking</h1>
+    <div id="seat-container">
+        <!-- Seats will be dynamically rendered here -->
+    </div>
+
+    <script>
+        // Fetch seats data from the server
+        const roomId = window.location.pathname.split('/')[2];
+        fetch(`/seats/api/seats/${roomId}`) // Replace 'roomId123' with the actual Room ID
+            .then(response => response.json())
+            .then(data => {
+                 // Use the updated groupSeats function
+                renderSeats(data);
+            })
+            .catch(error => console.error('Error fetching seats:', error));
+
+        // Group seats by row
+
+        // Render seats in the container
+        function renderSeats(groupedSeats) {
+            const container = document.getElementById('seat-container');
+            container.innerHTML = '';
+            // Loop through each row
+            for (const [row, seats] of Object.entries(groupedSeats)) {
+                console.log(row, seats);
+                const rowDiv = document.createElement('div');
+                rowDiv.classList.add('seat-row'); // Add a class for styling
+                const rowLabel = String.fromCharCode(64 + Number(row)).toUpperCase(); // Convert 1 to 'A', 2 to 'B', etc.
+                // rowDiv.textContent = `: `; // Row label
+                // Loop through seats in the row
+                seats.forEach(seat => {
+                    const seatButton = document.createElement('button');
+                    seatButton.textContent = `${rowLabel}${seat.column}`;
+                    seatButton.classList.add('seat'); // Add styling class
+                    seatButton.classList.add(seat.status.toLowerCase()); // Apply status class
+                    seatButton.disabled = seat.status !== 'Available'; // Disable if not available
+                    seatButton.onclick = () => selectSeat(seat); // Handle seat selection
+
+                    rowDiv.appendChild(seatButton);
+                });
+
+                container.appendChild(rowDiv);
+            }
+        }
+
+        // Handle seat selection
+        function selectSeat(seat) {
+            alert(`You selected Seat ${seat.row}-${seat.column}`);
+            // Additional logic for booking can go here
+        }
+    </script>
+</body>
+</html>

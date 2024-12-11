@@ -19,7 +19,11 @@ app.get('/showtimes/:movieId', async (req, res)=> {
 
 app.get('/showtimes/api/showtimes/:movieId', MovieController.fetchShowtimes);
 
+app.get('/seats/:roomId', async (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'seats.html'));
+})
 
+app.get('/seats/api/seats/:roomId', MovieController.fetchSeats);
 // // Endpoint to get data (example: fetch all movies)
 // app.get('/movies', async (req, res) => {
 //     try {

@@ -35,6 +35,23 @@ class MovieModel {
         }
     }
 
+    static async getSeatsByRoomId(roomId) {
+        try {
+            const result = await queryDatabase(`
+                SELECT seatid as id, rownumber as row, seatnumber as column, seatstatus as status
+                FROM Seats
+                WHERE roomid = $1
+                ORDER BY rownumber, seatnumber;
+            `, [roomId]);
+            
+            return result.rows;
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error('Failed to fetch seats');
+        }
+    }
+
     static async getMovieById(movieId) {
         const [rows] = await db.execute('SELECT * FROM movies WHERE movieid = $1', [movieId]);
         return rows[0];

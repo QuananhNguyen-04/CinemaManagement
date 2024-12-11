@@ -43,7 +43,8 @@
                     const formattedDate = `${day}-${month < 10 ? '0' + month : month}-${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes} - ${end_hours}:${end_minutes < 10 ? '0' + end_minutes : end_minutes}`;
 
                     listItem.textContent = formattedDate;
-                    listItem.onclick = () => showSeats(showtime.id);  // Click on showtime to view seats
+                    console.log(showtime.roomid);
+                    listItem.onclick = () => showSeats(showtime.roomid);  // Click on showtime to view seats
                     showtimeList.appendChild(listItem);
                 });
             });
