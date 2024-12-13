@@ -1,4 +1,23 @@
 const MovieModel = require('../models/movies.model');
+const CustomerModel = require('../models/customer.model');
+class CustomerController {
+    static async addCustomer(req, res) {
+        const { firstName, lastName, email, phoneNumber } = req.body;
+
+        if (!firstName || !lastName || !email || !phoneNumber) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        try {
+            const customer = await CustomerModel.addCustomer(firstName, lastName, email, phoneNumber);
+            res.status(201).json({ message: 'Customer added successfully', data: customer });
+        } catch (error) {
+            console.error('Error adding customer:', error);
+            res.status(500).json({ error: 'Failed to add customer' });
+        }
+    }
+}
+module.exports = CustomerController;
 
 class MovieController {
     // Get all movies and return JSON response
