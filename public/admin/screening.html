@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Screening</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<>
+    <h1>Add Screening</h1>
+    <div id="showtime-list">
+        <h2>Available Showtimes</h2>
+        <ul id="showtimeList">
+            <!-- Showtimes will be dynamically added here -->
+        </ul>
+    </div>   
+    <form id="findRoomForm">
+        <label for="screeningDate">Screening Date:</label>
+        <input type="date" id="screeningDate" name="screeningDate" required>
+
+        <label for="startTime">Start Time:</label>
+        <input type="time" id="startTime" name="startTime" required>
+
+        <button type="submit">Find Available Room</button>
+    </form>
+    <form> 
+        <label for="roomDropdown">Select Room:</label>
+        <select id="roomDropdown" name="roomId" required>
+            <option value="">--Select a Room--</option>
+        </select>
+        <button type="submit">Add new screening </button></form>
+    <script>
+        const movieId = window.location.pathname.split('/')[2]; // Get movie ID from URL
+        console.log(movieId)
+        // Fetch and display showtimes for the selected movie
+        fetch(`api/showtimes/${movieId}`)
+            .then(response => response.json())
+            .then(data => {
+                const showtimeList = document.getElementById('showtimeList');
+                data.forEach(showtime => {
+                    console.log(showtime);
+                    const listItem = document.createElement('li');
+                    let start = new Date(showtime.starttime);
+                    let end = new Date(showtime.endtime);
+                    console.log(start, end);
+                    const day = start.getDate();
+                    const month = start.getMonth() + 1;  // Months are zero-indexed, so add 1
+                    const year = start.getFullYear();
+                    const hours = start.getHours();
+                    const minutes = start.getMinutes();
+                    const end_hours = end.getHours();
+                    const end_minutes = end.getMinutes();
+                    // Format them as a string
+                    const formattedDate = `${day}-${month < 10 ? '0' + month : month}-${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes} - ${end_hours}:${end_minutes < 10 ? '0' + end_minutes : end_minutes}`;
+
+                    listItem.textContent = formattedDate;
+                    console.log(showtime.roomid);
+                    // listItem.onclick = () => showSeats(showtime.roomid);  // Click on showtime to view seats
+                    showtimeList.appendChild(listItem);
+                });
+            });
+        document.getElementById('findRoomForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            data.movieId = movieId;
+            fetch('/api/getRoom', {
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+                const roomList = document.getElementById('roomDropdown')
+                roomDropdown.innerHTML = '<option value="">--Select a Room--</option>';
+                roomList.forEach(room =>{
+                    const option = document.createElement('option');
+                    option.value = room.roomid;
+                    roomDropdown.appendChild(option);
+                })
+                document.getElementById('addScreeningForm').style.display = 'block';
+            })
+        })
+        document.getElementById('addScreeningForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            data.movieId = movieId;
+            fetch('/api/screening/add-screening', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to add screening');
+                });
+        });
+    </script>
+    </body>
+
+</html>
