@@ -58,17 +58,17 @@
         async function fetchRevenue(cinemaId, date) {
             try {
                 const [foodResponse, ticketResponse, totalResponse] = await Promise.all([
-                    fetch(`/api/revenue/food?cinemaId=${cinemaId}&date=${date}`),
-                    fetch(`/api/revenue/ticket?cinemaId=${cinemaId}&date=${date}`),
-                    fetch(`/api/revenue/total?cinemaId=${cinemaId}&date=${date}`)
+                    fetch(`/revenue/api/revenue/food?cinemaId=${cinemaId}&date=${date}`),
+                    fetch(`/revenue/api/revenue/ticket?cinemaId=${cinemaId}&date=${date}`),
+                    fetch(`/revenue/api/revenue/total?cinemaId=${cinemaId}&date=${date}`)
                 ]);
                 const foodRevenue = await foodResponse.json();
                 const ticketRevenue = await ticketResponse.json();
                 const totalRevenue = await totalResponse.json();
-
-                foodRevenueDisplay.textContent = `Food Revenue: $${foodRevenue.toFixed(2)}`;
-                ticketRevenueDisplay.textContent = `Ticket Revenue: $${ticketRevenue.toFixed(2)}`;
-                totalRevenueDisplay.textContent = `Total Revenue: $${totalRevenue.toFixed(2)}`;
+                console.log(foodRevenue);
+                foodRevenueDisplay.textContent = `Food Revenue: $${foodRevenue}`;
+                ticketRevenueDisplay.textContent = `Ticket Revenue: $${ticketRevenue}`;
+                totalRevenueDisplay.textContent = `Total Revenue: $${totalRevenue}`;
             } catch (error) {
                 console.error(error);
                 alert('Error fetching revenue. Please check the inputs.');

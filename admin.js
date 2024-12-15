@@ -3,6 +3,7 @@ const path = require('path');
 const FilmController = require('./controllers/films.controller');
 const MovieController = require('./controllers/movies.controller');
 const CinemaController = require('./controllers/cinema.controller');
+const RevenueController = require('./controllers/revenue.controller');
 const app = express();
 const port = 3001;
 
@@ -29,7 +30,7 @@ app.get('/room', async (req, res) => {
     res.sendFile(path.join(__dirname, 'public/admin', 'room.html'));
 });
 
-app.get('revenue', async (req, res) => {
+app.get('/revenue', async (req, res) => {
     res.sendFile(path.join(__dirname, 'public/admin', 'revenue.html'));
 });
 
@@ -41,6 +42,11 @@ app.post('/room/api/:roomId/add-seat', CinemaController.addSeat);
 app.get('/room/api/cinemas', CinemaController.getCinema);
 
 app.get('/room/api/cinemas/:cinemaId', CinemaController.getRoombyCinemaId);
+
+
+app.get('/revenue/api/revenue/food', RevenueController.getFoodRevenue);
+app.get('/revenue/api/revenue/ticket', RevenueController.getTicketRevenue);
+app.get('/revenue/api/revenue/total', RevenueController.getTotalRevenue);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
