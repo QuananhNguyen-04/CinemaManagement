@@ -16,6 +16,13 @@
         </ul>
     </div>
 
+    <div id="navigation-buttons">
+        <h2>Admin Navigation</h2>
+        <button id="roomButton">Manage Rooms</button>
+        <button id="revenueButton">View Revenue</button>
+    </div>
+
+
     <script>
         // Fetch and display the list of movies
         fetch('/api/movies')
@@ -33,6 +40,17 @@
         function showScreening(movieId) {
             window.location.href = `/screening/${movieId}`;
         }
+
+        // Redirect to room management page
+        document.getElementById('roomButton').addEventListener('click', () => {
+            window.location.href = '/room';
+        });
+
+        // Redirect to revenue page
+        document.getElementById('revenueButton').addEventListener('click', () => {
+            window.location.href = '/revenue';
+        });
+
     </script>
 
 </body>

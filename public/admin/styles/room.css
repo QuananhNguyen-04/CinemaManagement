@@ -1,0 +1,154 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Header Styling */
+h1 {
+    text-align: center;
+    padding: 20px;
+    background-color: #444;
+    color: white;
+    margin: 0;
+}
+
+/* Dropdown Container */
+#cinema-dropdown {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 400px;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Dropdown Label */
+#cinema-dropdown h2 {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Dropdown Select */
+#cinemaList {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+#cinemaList:hover {
+    border-color: #aaa;
+}
+
+/* Room Details */
+#room-details {
+    margin: 5px;
+    padding: 5px;
+    max-width: 400px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+#room-details h2 {
+    text-align: center;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Room List */
+#roomList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#roomList li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+#roomList li:last-child {
+    border-bottom: none;
+}
+
+/* General container styling */
+#seat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+    width: fit-content;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Seat row styling */
+.seat-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Seat button styling */
+.seat {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+/* Seat status */
+.seat.available {
+    background-color: #4caf50;
+    color: white;
+}
+
+.seat.reserved {
+    background-color: #f57c00;
+    color: white;
+    cursor: not-allowed;
+}
+
+.seat.broken {
+    background-color: #f44336;
+    color: white;
+    cursor: not-allowed;
+}
+
+/* Seat hover state for available seats */
+.seat.available:hover {
+    transform: scale(1.1);
+    background-color: #45a049;
+}
+
+/* Seat selected state */
+.seat.selected {
+    background-color: #2196f3;
+    color: white;
+}
+
+/* Disabled button styling */
+.seat:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}

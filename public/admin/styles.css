@@ -86,3 +86,38 @@ h1 {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 }
+
+/* Navigation Buttons Container */
+#navigation-buttons {
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 600px;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Buttons Styling */
+#navigation-buttons button {
+    padding: 15px 30px;
+    font-size: 16px;
+    margin: 10px;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#navigation-buttons button:hover {
+    background-color: #666;
+    transform: scale(1.05);
+}
+
+#navigation-buttons h2 {
+    margin-bottom: 15px;
+    color: #555;
+    font-size: 20px;
+}

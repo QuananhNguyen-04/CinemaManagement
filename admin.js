@@ -2,11 +2,14 @@ const express = require('express');
 const path = require('path');
 const FilmController = require('./controllers/films.controller');
 const MovieController = require('./controllers/movies.controller');
+const CinemaController = require('./controllers/cinema.controller');
 const app = express();
 const port = 3001;
 
 // Middleware to parse JSON
 app.use(express.static(path.join(__dirname, 'public/admin')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/admin', 'index.html'));
@@ -19,44 +22,26 @@ app.get('/screening/:movieId', async (req, res)=> {
 
 app.get('/screening/api/showtimes/:movieId', MovieController.fetchShowtimes) 
 
-app.post('/screening/api/getRoom', FilmController.getAvailableRoom);
-app.post('/screening/api/screening/add-screening', FilmController.updateScreen);
+app.post('/screening/:movieId/api/getRoom', FilmController.getAvailableRoom);
+app.post('/screening/:movieId/api/add-screening', FilmController.updateScreen);
 
-app.get('/seats/:roomId', async (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'seats.html'));
-})
+app.get('/room', async (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/admin', 'room.html'));
+});
 
-app.get('/seats/api/seats/:roomId', MovieController.fetchSeats);
-// // Endpoint to get data (example: fetch all movies)
-// app.get('/movies', async (req, res) => {
-//     try {
-//         const result = await pool.query('SELECT * FROM Movie;');
-//         res.json(result.rows);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Error fetching movies');
-//     }
-// });
+app.get('revenue', async (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/admin', 'revenue.html'));
+});
 
-// app.get()
-// // Endpoint to add data (example: add a new customer)
-// app.post('/customers', async (req, res) => {
-//     const { firstName, lastName, email, phoneNumber } = req.body;
-//     try {
-//         const query = `
-//             INSERT INTO Customer (FirstName, LastName, Email, PhoneNumber) 
-//             VALUES ($1, $2, $3, $4) RETURNING *;
-//         `;
-//         const values = [firstName, lastName, email, phoneNumber];
-//         const result = await pool.query(query, values);
-//         res.json(result.rows[0]);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Error adding customer');
-//     }
-// });
+// Route for room management
+app.get('/room/api/rooms/:roomId/seats', CinemaController.viewSeats);
 
-// Start the server
+app.post('/room/api/:roomId/add-seat', CinemaController.addSeat);
+
+app.get('/room/api/cinemas', CinemaController.getCinema);
+
+app.get('/room/api/cinemas/:cinemaId', CinemaController.getRoombyCinemaId);
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

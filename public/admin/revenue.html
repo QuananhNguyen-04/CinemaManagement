@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-section {
+            margin: 20px 0;
+        }
+        button {
+            cursor: pointer;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .revenue-result {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Revenue Management</h1>
+
+    <div class="form-section">
+        <label for="cinema-id">Cinema ID:</label>
+        <input type="text" id="cinema-id" placeholder="e.g., Cinema_01" />
+        <label for="revenue-date">Revenue Date:</label>
+        <input type="date" id="revenue-date" />
+        <button id="get-revenue">Get Revenue</button>
+
+        <div class="revenue-result" id="food-revenue">Food Revenue: N/A</div>
+        <div class="revenue-result" id="ticket-revenue">Ticket Revenue: N/A</div>
+        <div class="revenue-result" id="total-revenue">Total Revenue: N/A</div>
+    </div>
+
+    <script>
+        const cinemaIdInput = document.getElementById('cinema-id');
+        const revenueDateInput = document.getElementById('revenue-date');
+        const getRevenueButton = document.getElementById('get-revenue');
+        const foodRevenueDisplay = document.getElementById('food-revenue');
+        const ticketRevenueDisplay = document.getElementById('ticket-revenue');
+        const totalRevenueDisplay = document.getElementById('total-revenue');
+
+        async function fetchRevenue(cinemaId, date) {
+            try {
+                const [foodResponse, ticketResponse, totalResponse] = await Promise.all([
+                    fetch(`/api/revenue/food?cinemaId=${cinemaId}&date=${date}`),
+                    fetch(`/api/revenue/ticket?cinemaId=${cinemaId}&date=${date}`),
+                    fetch(`/api/revenue/total?cinemaId=${cinemaId}&date=${date}`)
+                ]);
+                const foodRevenue = await foodResponse.json();
+                const ticketRevenue = await ticketResponse.json();
+                const totalRevenue = await totalResponse.json();
+
+                foodRevenueDisplay.textContent = `Food Revenue: $${foodRevenue.toFixed(2)}`;
+                ticketRevenueDisplay.textContent = `Ticket Revenue: $${ticketRevenue.toFixed(2)}`;
+                totalRevenueDisplay.textContent = `Total Revenue: $${totalRevenue.toFixed(2)}`;
+            } catch (error) {
+                console.error(error);
+                alert('Error fetching revenue. Please check the inputs.');
+            }
+        }
+
+        getRevenueButton.addEventListener('click', () => {
+            const cinemaId = cinemaIdInput.value.trim();
+            const date = revenueDateInput.value;
+            if (!cinemaId || !date) return alert('Please provide valid inputs for cinema ID and date.');
+            fetchRevenue(cinemaId, date);
+        });
+    </script>
+</body>
+</html>

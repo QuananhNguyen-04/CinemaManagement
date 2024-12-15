@@ -13,31 +13,63 @@ const queryDatabase = (query, params = []) => {
 };
 
 class FilmModel {
-    static async addScreening(roomId, movieId, starttime, endtime) {
+    static async addScreening(roomId, movieId, starttime, screeningDate) {
         try {
-            const result = await queryDatabase(`INSERT INTO screenings (movie_id, screening_date, start_time, end_time, room)
-        VALUES ($1, $2, $3, $4, $5) RETURNING *'
-        `);
+            const result = await queryDatabase(`INSERT INTO screenings ($1, $2, $3, $4, $5)
+        RETURNING *'
+        `, [roomId, movieId, starttime, endtime, 100]);
         }
         catch (error) {
             throw new Error('Failed to add screening')
         }
     }
 
-    static async viewTotalCustomer() {
-
+    static async viewTotalRevenue(cinemaid, date) {
+        try {
+            const result = await queryDatabase(`SELECT * FROM get_total_revenue($1, $2)`
+                , [cinemaid, date]
+            );
+            return result.rows;
+        }
+        catch (error) {
+            throw new Error('Failed to view total revenue');
+        }
     }
-    
-    static async viewTotalRevenue() {
 
+    static async viewTotalRevenuefromTicket(cinemaid, date) {
+        try {
+            const result = await queryDatabase(`SELECT * FROM get_ticket_revenue($1, $2)`
+                , [cinemaid, date]);
+            return result.rows;
+        }
+        catch (error) {
+            throw new Error('Failed to view ticket revenue');
+        }
+    }   
+
+    static async viewTotalRevenuefromFood(cinemaid, date) {
+        try {
+            const result = await queryDatabase(`SELECT * FROM get_food_revenue($1, $2)`
+                , [cinemaid, date]);
+            return result.rows;
+        }
+        catch (error) {
+            throw new Error('Failed to view food revenue');
+        }
     }
 
-    static async viewTotalRevenuefromTicket() {
+    static async getAvailableRoom(movieid, date, starttime) {
+        try {
+            console.log(movieid, date, starttime);
+            const result = await queryDatabase(`SELECT * FROM validate_rooms($1, $2, $3) `,
+                [movieid, date, starttime]
+            );
 
-    }
-
-    static async viewTotalRevenuefromFood() {
-
+            return result.rows;
+        }
+        catch (error) {
+            throw new Error('Failed to get available room');
+        }
     }
 }
 

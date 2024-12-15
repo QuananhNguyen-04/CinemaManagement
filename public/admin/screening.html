@@ -7,7 +7,6 @@
     <title>Add Screening</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<>
     <h1>Add Screening</h1>
     <div id="showtime-list">
         <h2>Available Showtimes</h2>
@@ -24,7 +23,7 @@
 
         <button type="submit">Find Available Room</button>
     </form>
-    <form> 
+    <form id="addScreeningForm"> 
         <label for="roomDropdown">Select Room:</label>
         <select id="roomDropdown" name="roomId" required>
             <option value="">--Select a Room--</option>
@@ -43,7 +42,7 @@
                     const listItem = document.createElement('li');
                     let start = new Date(showtime.starttime);
                     let end = new Date(showtime.endtime);
-                    console.log(start, end);
+
                     const day = start.getDate();
                     const month = start.getMonth() + 1;  // Months are zero-indexed, so add 1
                     const year = start.getFullYear();
@@ -62,37 +61,53 @@
             });
         document.getElementById('findRoomForm').addEventListener('submit', async function (event) {
             event.preventDefault();
-
+            
             const formData = new FormData(event.target);
             const data = Object.fromEntries(formData.entries());
+            const screeningDate = data.screeningDate;
+            const startTime = data.startTime;
             data.movieId = movieId;
-            fetch('/api/getRoom', {
-                method: 'POST', 
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
+            localStorage.setItem('screeningData', JSON.stringify(data));
+            const screeningData = JSON.parse(localStorage.getItem('screeningData'));
+            console.log(localStorage);
+            fetch(`${movieId}/api/getRoom`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json', // Ensure JSON payload
+                },
+                body: JSON.stringify(data), // Convert data to JSON string
             }).then(response => response.json())
             .then(data => {
-                console.log(data);
-                const roomList = document.getElementById('roomDropdown')
+
                 roomDropdown.innerHTML = '<option value="">--Select a Room--</option>';
-                roomList.forEach(room =>{
+                const roomList = document.getElementById('roomDropdown')
+                data.forEach(room =>{
+                    console.log(room);
                     const option = document.createElement('option');
                     option.value = room.roomid;
+                    option.textContent = room.roomid + ' - ' + room.cinemaid + ' - ' + room.capacity;
                     roomDropdown.appendChild(option);
                 })
                 document.getElementById('addScreeningForm').style.display = 'block';
             })
         })
+        
         document.getElementById('addScreeningForm').addEventListener('submit', function (event) {
             event.preventDefault();
-
+            
             const formData = new FormData(event.target);
             const data = Object.fromEntries(formData.entries());
-            data.movieId = movieId;
-            fetch('/api/screening/add-screening', {
+            const screeningData = JSON.parse(localStorage.getItem('screeningData'));
+            console.log(screeningData)
+            const mergeddata = {
+                ...data,
+                ...screeningData
+            }
+            console.log(mergeddata);
+            fetch(`${movieId}/api/add-screening`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(mergeddata)
             })
                 .then(response => response.json())
                 .then(result => {

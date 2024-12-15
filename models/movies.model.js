@@ -16,6 +16,7 @@ class MovieModel {
     // Fetch all movies
     static async getAllMovies() {
         try {
+            const currentTimestamp = new Date().toISOString();
             const result = await queryDatabase('SELECT * FROM Movie');
             return result.rows;
         } catch (error) {

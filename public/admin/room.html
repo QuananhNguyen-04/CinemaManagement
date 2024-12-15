@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Seat Management</title>
+    <link rel="stylesheet" href="/styles/room.css">
+</head>
+<body>
+    <h1>Room Seat Management</h1>
+
+    <div class="form-section">
+        <h2>Select a Cinema</h2>
+        <select id="cinemaList">
+            <option value="">-- Select a Cinema --</option>
+            <!-- Cinemas will be dynamically loaded -->
+        </select>
+        <label for="room-select">Choose a room:</label>
+        <select id="room-select" disabled>
+            <option value="">Select Room</option>
+        </select>
+        <button id="view-seats">View Seats</button>
+
+    </div>
+    <div id="room-details">
+        <!-- const cinemaName = document.getElementById('cinema-name'); -->
+        <h2 id="details">Details</h2>
+        
+    </div>
+
+    <div class="form-section">
+        <h2>Add Seat</h2>
+        <label for="seat-row">Row:</label>
+        <input type="number" id="seat-row" placeholder="e.g., 1" />
+        <label for="seat-number">Number:</label>
+        <input type="number" id="seat-number" placeholder="e.g., 5" />
+        <button id="add-seat">Add Seat</button>
+    </div>
+    <br/>
+    <div id="seats-container"></div>
+
+    <script>
+        const seatsContainer = document.getElementById('seats-container');
+        const roomIdInput = document.getElementById('room-id');
+        const viewSeatsButton = document.getElementById('view-seats');
+        const addSeatButton = document.getElementById('add-seat');
+        const seatRowInput = document.getElementById('seat-row');
+        const seatNumberInput = document.getElementById('seat-number');
+
+        fetch('/room/api/cinemas')
+        .then(response => response.json())
+        .then(data => {
+            const cinemaSelect = document.getElementById('cinemaList');
+            console.log(data);
+            data.forEach(cinema => {
+                const option = document.createElement('option');
+                console.log(cinema);
+                option.value = cinema.cinemaid;
+                option.textContent = cinema.cinemaid + ' - ' + cinema.address;
+                cinemaSelect.appendChild(option);
+            });
+        });
+        
+        // When a cinema is selected, fetch rooms for that cinema
+    document.getElementById('cinemaList').addEventListener('change', function () {
+        const cinemaId = this.value;
+        const roomSelect = document.getElementById('room-select');
+        const selectedInfo = document.getElementById('selected-info');
+
+        // Reset room options
+        roomSelect.innerHTML = '<option value="">Select Room</option>';
+        roomSelect.disabled = !cinemaId;
+        
+        console.log(cinemaId)
+        if (cinemaId) {
+            // Fetch rooms for the selected cinema
+            fetch(`/room/api/cinemas/${cinemaId}`)
+                .then(response => response.json())
+                .then(rooms => {
+                    // Populate the room dropdown
+                    console.log(rooms)
+                    rooms.forEach(room => {
+                        const option = document.createElement('option');
+                        option.value = room.roomid;
+                        option.textContent = `${room.roomid} - ${room.numberofseats} seats`;
+                        roomSelect.appendChild(option);
+                    });
+                })
+                .catch(() => alert('Error fetching rooms'));
+        }
+
+        // Hide selected cinema and room info if no cinema is selected
+        // selectedInfo.style.display = cinemaId ? 'block' : 'none';
+    });
+
+    // When a room is selected, display selected cinema and room info
+    document.getElementById('room-select').addEventListener('change', function () {
+        const cinemaSelect = document.getElementById('cinemaList');
+        const roomSelect = this;
+        const selectedInfo = document.getElementById('selected-info');
+        const selectedDetails = document.getElementById('details')
+        const roomSeats = document.getElementById('room-seats');
+
+        const selectedCinemaId = cinemaSelect.value;
+        const selectedRoomNumber = roomSelect.value;
+
+        if (selectedCinemaId && selectedRoomNumber) {
+            // Fetch selected cinema details
+            selectedDetails.textContent = selectedCinemaId + " - " + selectedRoomNumber; 
+            // Fetch room details based on room number and cinema
+            fetchSeats(selectedRoomNumber);
+        }
+    });
+        async function fetchSeats(roomId) {
+            try {
+                const response = await fetch(`/room/api/rooms/${roomId}/seats`);
+                if (!response.ok) throw new Error('Failed to fetch seats');
+                const seats = await response.json();
+                console.log(seats);
+                renderSeats(seats);
+            } catch (error) {
+                console.error(error);
+                alert('Error fetching seats. Please check the room ID.');
+            }
+        }
+
+        function renderSeats(groupedSeats) {
+            const container = document.getElementById('seats-container');
+            container.innerHTML = '';
+            // Loop through each row
+            const newgroupedSeats = {}
+            groupedSeats.forEach(seat => {
+                // Create a group for this row if it doesn't exist
+                if (!newgroupedSeats[seat.row_number]) {
+                    newgroupedSeats[seat.row_number] = [];
+                }
+                // Add the seat to the corresponding row group
+                newgroupedSeats[seat.row_number].push({
+                    seat_id: seat.seat_id,
+                    row: seat.row_number,
+                    column: seat.seat_number,
+                    status: seat.status,
+                });
+            })
+            
+            for (const [row, seats] of Object.entries(newgroupedSeats)) {
+                const rowDiv = document.createElement('div');
+                rowDiv.classList.add('seat-row'); // Add a class for styling
+                console.log(row)
+                const rowLabel = String.fromCharCode(64 + Number(row)).toUpperCase(); // Convert 1 to 'A', 2 to 'B', etc.
+                // rowDiv.textContent = `: `; // Row label
+                // Loop through seats in the row
+                console.log(seats);
+                seats.forEach(seat => {
+                    const seatButton = document.createElement('button');
+                    seatButton.textContent = `${rowLabel}${seat.column}`;
+                    seatButton.classList.add('seat'); // Add styling class
+                    seatButton.classList.add(seat.status.toLowerCase()); // Apply status class
+                    seatButton.disabled = seat.status !== 'Available'; // Disable if not available
+                    seatButton.onclick = () => selectSeat(seat); // Handle seat selection
+
+                    rowDiv.appendChild(seatButton);
+                });
+
+                container.appendChild(rowDiv);
+            }
+        }
+
+        async function addSeat(roomId, row, number) {
+            try {
+                const response = await fetch(`room/api/${roomId}/add-seat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ row, number }),
+                });
+                if (!response.ok) throw new Error('Failed to add seat');
+                alert('Seat added successfully!');
+                fetchSeats(roomId);
+            } catch (error) {
+                console.error(error);
+                alert('Error adding seat. Please try again.');
+            }
+        }
+
+        viewSeatsButton.addEventListener('click', () => {
+            const roomId = roomIdInput.value.trim();
+            if (!roomId) return alert('Please enter a room ID.');
+            console.log(roomId);
+            fetchSeats(roomId);
+        });
+
+        addSeatButton.addEventListener('click', () => {
+            const roomSelect = document.getElementById('room-select');
+            const roomId = roomSelect.value;
+            const row = parseInt(seatRowInput.value.trim(), 10);
+            const number = parseInt(seatNumberInput.value.trim(), 10);
+            if (!roomId || isNaN(row) || isNaN(number)) return alert('Invalid inputs for row or number.');
+            addSeat(roomId, row, number);
+        });
+    </script>
+</body>
+</html>

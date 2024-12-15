@@ -1,5 +1,5 @@
 const MovieModel = require('../models/movies.model');
-const CustomerModel = require('../models/customer.model');
+// const CustomerModel = require('../models/customer.model');
 class CustomerController {
     static async addCustomer(req, res) {
         const { firstName, lastName, email, phoneNumber } = req.body;
@@ -9,7 +9,7 @@ class CustomerController {
         }
 
         try {
-            const customer = await CustomerModel.addCustomer(firstName, lastName, email, phoneNumber);
+            // const customer = await CustomerModel.addCustomer(firstName, lastName, email, phoneNumber);
             res.status(201).json({ message: 'Customer added successfully', data: customer });
         } catch (error) {
             console.error('Error adding customer:', error);
