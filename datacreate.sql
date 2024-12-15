@@ -738,9 +738,27 @@ END;
 $$ LANGUAGE plpgsql;
 
 --3. Xóa ghế khỏi phòng
-CREATE OR REPLACE FUNCTION delete_seat(seat_id_input VARCHAR)
+CREATE OR REPLACE FUNCTION delete_seat(
+    cinema_id_input VARCHAR,
+    room_id_input VARCHAR,
+    seat_row_input INT,
+    seat_number_input INT
+)
 RETURNS VOID AS $$
+DECLARE
+    seat_id_input VARCHAR;
+    row_letter CHAR;
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM Room WHERE RoomID = room_id_input) THEN
+        RAISE EXCEPTION 'Room with ID % does not exist.', room_id_input;
+    END IF;
+
+    -- Chuyển đổi RowNumber sang chữ cái (A, B, C, ...)
+    row_letter := CHR(64 + seat_row_input); -- CHR(65) is 'A'
+
+    -- Tạo ID cho ghế mới
+    seat_id_input := CONCAT(cinema_id_input, '_', room_id_input, '_', row_letter, LPAD(seat_number_input::TEXT, 2, '0'));
+
     -- Kiểm tra ghế có tồn tại hay không
     IF NOT EXISTS (SELECT 1 FROM Seats WHERE SeatID = seat_id_input) THEN
         RAISE EXCEPTION 'Seat with ID % does not exist.', seat_id_input;
@@ -803,27 +821,6 @@ BEGIN
 
     RETURN total_revenue; 
 END; 
-$$ LANGUAGE plpgsql;
-
---7. Function để xử lý xóa vé và cập nhật trạng thái ghế
-CREATE OR REPLACE FUNCTION cleanup_tickets_and_update_seats()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Cập nhật trạng thái ghế về 'Available'
-    UPDATE Seats
-    SET SeatStatus = 'Available'
-    WHERE SeatID IN (
-        SELECT SeatID
-        FROM Ticket
-        WHERE ScreeningID = OLD.ScreeningID
-    );
-
-    -- Xóa các vé liên quan
-    DELETE FROM Ticket
-    WHERE ScreeningID = OLD.ScreeningID;
-
-    RETURN NULL;
-END;
 $$ LANGUAGE plpgsql;
 
 --1. Từ chối đặt vé khi buổi chiếu đã kết thúc
@@ -954,15 +951,6 @@ CREATE OR REPLACE TRIGGER trg_check_duplicate_seat_booking
 BEFORE INSERT ON Ticket
 FOR EACH ROW
 EXECUTE FUNCTION check_duplicate_seat_booking();
-
---6. Trigger kích hoạt sau khi buổi chiếu kết thúc
-CREATE OR REPLACE TRIGGER trg_cleanup_tickets_and_seats
-AFTER UPDATE OF EndTime ON Screening
-FOR EACH ROW
-WHEN (NEW.EndTime < CURRENT_TIMESTAMP)
-EXECUTE FUNCTION cleanup_tickets_and_update_seats();
-
-
 
 
 CREATE OR REPLACE FUNCTION validate_rooms(

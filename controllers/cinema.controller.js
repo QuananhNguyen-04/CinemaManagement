@@ -38,6 +38,18 @@ class CinemaController {
         }
     }
 
+    static async removeSeat(req, res) {
+        try {
+            const { cinemaId, row, number } = req.body;
+            const {roomId }= req.params;
+            console.log( cinemaId, roomId, row, number )
+            const result = await CinemaModel.removeSeatFromRoom(cinemaId, roomId, row, number);
+            res.json({ message: "Seat remove successfully" });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Error removing seat");
+        }
+    }
     // Controller to delete a seat from a room
     static async deleteSeat(req, res) {
         try {

@@ -19,7 +19,6 @@
         <select id="room-select" disabled>
             <option value="">Select Room</option>
         </select>
-        <button id="view-seats">View Seats</button>
 
     </div>
     <div id="room-details">
@@ -36,6 +35,15 @@
         <input type="number" id="seat-number" placeholder="e.g., 5" />
         <button id="add-seat">Add Seat</button>
     </div>
+
+    <div class="form-section">
+        <h2>Remove Seat</h2>
+        <label for="seat-row">Row:</label>
+        <input type="number" id="seat-row-remove" placeholder="e.g., 1" />
+        <label for="seat-number">Number:</label>
+        <input type="number" id="seat-number-remove" placeholder="e.g., 5" />
+        <button id="remove-seat">Remove Seat</button>
+    </div>
     <br/>
     <div id="seats-container"></div>
 
@@ -46,6 +54,8 @@
         const addSeatButton = document.getElementById('add-seat');
         const seatRowInput = document.getElementById('seat-row');
         const seatNumberInput = document.getElementById('seat-number');
+        const seatRowInputRemove = document.getElementById('seat-row-remove');
+        const seatNumberInputRemove = document.getElementById('seat-number-remove');
 
         fetch('/room/api/cinemas')
         .then(response => response.json())
@@ -166,12 +176,12 @@
             }
         }
 
-        async function addSeat(roomId, row, number) {
+        async function addSeat(cinemaId, roomId, row, number) {
             try {
                 const response = await fetch(`room/api/${roomId}/add-seat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ row, number }),
+                    body: JSON.stringify({cinemaId, row, number }),
                 });
                 if (!response.ok) throw new Error('Failed to add seat');
                 alert('Seat added successfully!');
@@ -182,21 +192,44 @@
             }
         }
 
-        viewSeatsButton.addEventListener('click', () => {
-            const roomId = roomIdInput.value.trim();
-            if (!roomId) return alert('Please enter a room ID.');
-            console.log(roomId);
-            fetchSeats(roomId);
-        });
+        async function removeSeat(cinemaId, roomId, row, number) {
+            try {
+                const response = await fetch(`room/api/${roomId}/remove-seat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({cinemaId, row, number }),
+                });
+                if (!response.ok) throw new Error('Failed to remove seat');
+                alert('Seat removed successfully!');
+                fetchSeats(roomId);
+            } catch (error) {
+                console.error(error);
+                alert('Error removed seat. Please try again.');
+            }
+        }
 
         addSeatButton.addEventListener('click', () => {
+            const cinemaSelect = document.getElementById('cinemaList');
             const roomSelect = document.getElementById('room-select');
             const roomId = roomSelect.value;
+            const cinemaId = cinemaSelect.value;
             const row = parseInt(seatRowInput.value.trim(), 10);
             const number = parseInt(seatNumberInput.value.trim(), 10);
             if (!roomId || isNaN(row) || isNaN(number)) return alert('Invalid inputs for row or number.');
-            addSeat(roomId, row, number);
+            addSeat(cinemaId, roomId, row, number);
         });
+
+        document.getElementById('remove-seat').addEventListener('click', () => {
+            const cinemaSelect = document.getElementById('cinemaList');
+            const roomSelect = document.getElementById('room-select');
+            const roomId = roomSelect.value;
+            const cinemaId = cinemaSelect.value;
+            const row = parseInt(seatRowInputRemove.value.trim(), 10);
+            const number = parseInt(seatNumberInputRemove.value.trim(), 10);
+            console.log(row, number);
+            if (!roomId || isNaN(row) || isNaN(number)) return alert('Invalid inputs for row or number.');
+            removeSeat(cinemaId, roomId, row, number);
+        })
     </script>
 </body>
 </html>

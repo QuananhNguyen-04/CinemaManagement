@@ -25,6 +25,11 @@ class CinemaModel {
         return result;
     }
 
+    static async removeSeatFromRoom(cinemaId, roomId, row, number) {
+        const result = await db.query('SELECT delete_seat($1, $2, $3, $4)', [cinemaId, roomId, row, number])
+        return result;
+    }
+    
     // Function 3: Delete seat from room
     static async deleteSeat(seatId) {
         const result = await db.query('SELECT delete_seat($1)', [seatId]);

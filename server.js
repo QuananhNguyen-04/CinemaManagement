@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const MovieController = require('./controllers/movies.controller');
+const PaymentController = require('./controllers/payment.controller');
 
 const app = express();
 const port = 3000;
@@ -24,6 +25,12 @@ app.get('/seats/:roomId', async (req, res) => {
 })
 
 app.get('/seats/api/seats/:roomId', MovieController.fetchSeats);
+
+app.get('/payment', async(req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'payment.html'))
+})
+
+app.post('/api/payment', PaymentController.addTicket)
 // // Endpoint to get data (example: fetch all movies)
 // app.get('/movies', async (req, res) => {
 //     try {

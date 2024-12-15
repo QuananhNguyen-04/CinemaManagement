@@ -43,6 +43,7 @@ app.get('/room/api/cinemas', CinemaController.getCinema);
 
 app.get('/room/api/cinemas/:cinemaId', CinemaController.getRoombyCinemaId);
 
+app.post('/room/api/:roomId/remove-seat', CinemaController.removeSeat);
 
 app.get('/revenue/api/revenue/food', RevenueController.getFoodRevenue);
 app.get('/revenue/api/revenue/ticket', RevenueController.getTicketRevenue);

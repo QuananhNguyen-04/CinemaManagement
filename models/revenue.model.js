@@ -40,4 +40,5 @@ class revenueModel {
         }
     };
 }
+
 module.exports = revenueModel;
