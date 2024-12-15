@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Screening</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles/screening.css">
 </head>
     <h1>Add Screening</h1>
     <div id="showtime-list">
-        <h2>Available Showtimes</h2>
+        <h2>Current Showtimes</h2>
         <ul id="showtimeList">
             <!-- Showtimes will be dynamically added here -->
         </ul>
@@ -42,7 +42,7 @@
                     const listItem = document.createElement('li');
                     let start = new Date(showtime.starttime);
                     let end = new Date(showtime.endtime);
-
+                    let roomid = showtime.roomid;
                     const day = start.getDate();
                     const month = start.getMonth() + 1;  // Months are zero-indexed, so add 1
                     const year = start.getFullYear();
@@ -51,7 +51,7 @@
                     const end_hours = end.getHours();
                     const end_minutes = end.getMinutes();
                     // Format them as a string
-                    const formattedDate = `${day}-${month < 10 ? '0' + month : month}-${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes} - ${end_hours}:${end_minutes < 10 ? '0' + end_minutes : end_minutes}`;
+                    const formattedDate = `${day}-${month < 10 ? '0' + month : month} ${hours}:${minutes < 10 ? '0' + minutes : minutes} - ${end_hours}:${end_minutes < 10 ? '0' + end_minutes : end_minutes} at ${roomid}`;
 
                     listItem.textContent = formattedDate;
                     console.log(showtime.roomid);

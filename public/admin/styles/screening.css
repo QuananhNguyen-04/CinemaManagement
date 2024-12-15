@@ -1,0 +1,133 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 2.5rem;
+    color: #4CAF50;
+}
+
+h2 {
+    margin-top: 10px;
+    font-size: 1.5rem;
+    color: #666;
+}
+
+/* Container Styling */
+#showtime-list {
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* List Styling */
+#showtimeList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#showtimeList li {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+#showtimeList li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Form Styling */
+form {
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    #showtime-list, form {
+        width: 95%;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Dropdown Styling */
+#roomDropdown {
+    appearance: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+/* Add Screening Form */
+#addScreeningForm {
+    display: none; /* Initially hidden */
+}
+
+#addScreeningForm.show {
+    display: block;
+}
+
+/* Visual Feedback */
+input:focus, select:focus, button:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}

@@ -21,17 +21,17 @@ class FilmController {
     static async updateScreen(req, res) {
         console.log('updateScreen');
         console.log(req.body);
-        const {movieId, screeningDate, startTime, roomid } = req.body;
-        
-        if (!movieId || !screeningDate || !startTime || !roomid) {
+        const {movieId, screeningDate, startTime, roomId } = req.body;
+        console.log(movieId, screeningDate, startTime, roomId);
+        if (!movieId || !screeningDate || !startTime || !roomId) {
             return res.status(400).json({ message: 'All fields are required' });
         }
-        starttime = this.toString(date) + ' ' + this.toString(starttime);
-        endtime = this.toString(date) + this.toString(endtime);
-        const starttime = new Date(`${screeningDate}T${startTime}`).toISOString();
-        const endtime = new Date(`${screeningDate}T${endTime}`).toISOString();
+        // starttime = this.toString(date) + ' ' + this.toString(starttime);
+        // endtime = this.toString(date) + this.toString(endtime);
+        // const starttime = new Date(`${screeningDate}T${startTime}`).toISOString();
+        // const endtime = new Date(`${screeningDate}T${endTime}`).toISOString();
         try {
-            await FilmModel.addScreening(roomid, movieId, starttime, endtime);
+            await FilmModel.addScreening(roomId, movieId, startTime, screeningDate);
             res.json(201).json({message: 'Added successfully'});
         } catch (error) {
             console.error("Error adding screen", error);

@@ -15,9 +15,8 @@ const queryDatabase = (query, params = []) => {
 class FilmModel {
     static async addScreening(roomId, movieId, starttime, screeningDate) {
         try {
-            const result = await queryDatabase(`INSERT INTO screenings ($1, $2, $3, $4, $5)
-        RETURNING *'
-        `, [roomId, movieId, starttime, endtime, 100]);
+            const result = await queryDatabase(`SELECT add_new_screening($1, $2, $3, $4)
+        `, [roomId, movieId, starttime, screeningDate]);
         }
         catch (error) {
             throw new Error('Failed to add screening')
